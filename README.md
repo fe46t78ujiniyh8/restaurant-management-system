@@ -20,7 +20,7 @@ Pillow (PIL) for image handling
 
 Installation
 Clone this repository:
-git clone https://github.com/yourusername/restaurant-management-system.git
+git clone https://github.com/fe46t78ujiniyh8/restaurant-management-system.git
 cd restaurant-management-system
 
 Install required dependencies:
