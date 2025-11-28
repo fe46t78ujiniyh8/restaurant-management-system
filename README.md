@@ -1,6 +1,8 @@
 # restaurant-management-system
 SDSC 5003 Project Track1
+
 Restaurant Management System
+
 A desktop application for managing restaurant operations, built with Python and SQLite. This system helps streamline table management, order processing, kitchen coordination, and inventory tracking.
 
 Features
