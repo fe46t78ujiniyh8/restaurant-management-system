@@ -343,14 +343,15 @@ class RestaurantApp:
             return
 
         try:
-            self.cursor.execute("INSERT INTO tables (table_number, capacity, status) VALUES (?, ?, 'Free')", (str(num), cap))
+            table_number = f"Table {num}"
+            self.cursor.execute("INSERT INTO tables (table_number, capacity, status) VALUES (?, ?, 'Free')", (table_number, cap))
             self.connection.commit()
             self.refresh_tables()
             # Refresh table selection on order page
             self.refresh_table_combo()
-            messagebox.showinfo("Success", "Added successfully")
+            messagebox.showinfo("Success", f"Added successfully: {table_number}")
         except sqlite3.IntegrityError:
-            messagebox.showerror("Error", "Table number already exists")
+            messagebox.showerror("Error", f"Table {table_number} already exists")
 
     def delete_table(self):
         sel = self.table_tree.selection()
