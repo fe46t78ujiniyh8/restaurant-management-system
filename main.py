@@ -1134,7 +1134,7 @@ class RestaurantApp:
 
         # Select corresponding QR code image based on payment method (WeChat: wechat_qrcode.jpg, Alipay: alipay_qrcode.jpg)
         image_path = f"{payment_method.lower().replace(' ', '_')}_qrcode.jpg"
-        
+
         try:
             # Open and resize image
             img = Image.open(image_path)
@@ -1704,9 +1704,10 @@ class RestaurantApp:
         button_frame = ttk.Frame(tab)
         button_frame.pack(fill=tk.X, padx=10, pady=10)
         ttk.Button(button_frame, text="Add Ingredient", command=self.add_ingredient).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="Delete Ingredient", command=self.delete_ingredient).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="Update Inventory", command=self.update_ingredient).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="Refresh Inventory", command=self.refresh_inventory).pack(side=tk.LEFT, padx=5)
-
+        
         # Inventory list (add scrollbars)
         inventory_container = ttk.Frame(tab)
         inventory_container.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
@@ -1782,6 +1783,34 @@ class RestaurantApp:
             messagebox.showerror("Error", "Stock and threshold must be numbers")
         except Exception as e:
             messagebox.showerror("Error", f"Add failed: {str(e)}")
+
+    def delete_ingredient(self):
+        sel = self.inventory_tree.selection()
+        if not sel:
+            messagebox.showwarning("Prompt", "Please select the ingredient to delete")
+            return
+            
+        item = self.inventory_tree.item(sel[0])
+        values = item["values"]
+        if not values:
+            return
+            
+        ingredient_id, name, unit, stock, threshold, status = values
+
+        # Confirm deletion
+        confirm = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete '{name}'?")
+        if not confirm:
+            return
+
+        try:
+            self.cursor.execute("DELETE FROM ingredients WHERE id = ?", (ingredient_id,))
+            self.connection.commit()
+            
+            self.refresh_inventory()
+            messagebox.showinfo("Success", f"Ingredient '{name}' has been deleted")
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Delete failed: {str(e)}")
 
     def update_ingredient(self):
         sel = self.inventory_tree.selection()
